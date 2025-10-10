@@ -1,0 +1,44 @@
+model:
+  name: 'MinkUNet34'
+  in_feat_size: 1
+  out_classes: 16
+  ignore_label: -1
+
+source_dataset:
+  name: 'MspcLiDAR_32'
+  dataset_path: '/home/chenzhe/data/MspcLiDAR/kitti/sem_lidar32'
+  mapping_path: '/home/chenzhe/PC_DA/core/datasets/mapping_cfg/mspclidar.yaml'
+
+  voxel_size: 0.05
+  use_intensity: False
+  sub_numpts:
+  balance_weights: False
+  augmentation:
+    z_rotate: True
+    random_jitter: False
+    random_flip: True
+    random_scale: True
+
+dataloader:
+  batch_size: 6
+  num_workers: 6
+
+pipeline:
+  epochs: 50
+  gpus: 0
+  seed: 1234
+  validate: True
+  resume: ''
+  criterion: 'CELoss'
+
+  optimizer_name: 'SGD'
+
+  optimizer_SGD: 
+    lr: 0.002
+    momentum: 0.98
+    weight_decay: 0.0001
+
+  scheduler: 'CosineAnnealingLR'
+
+OUTPUT_DIR: 'results/exp/sem_lidar32_MinkUnet34_CosineAnnealingLR_noBW_fullaug'
+

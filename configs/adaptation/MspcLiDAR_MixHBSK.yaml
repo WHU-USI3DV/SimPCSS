@@ -1,0 +1,65 @@
+model:
+  name: 'MinkUNet34_SD'
+  in_feat_size: 1
+  out_classes: 16
+  ignore_label: -1
+
+source_dataset:
+  name: 'SemanticKitti'
+  dataset_path: '/home/chenzhe/data/SemanticKitti/sequences'
+  mapping_path: '/home/chenzhe/PC_DA/core/datasets/mapping_cfg/semantic-kitti_16classes.yaml'
+
+  voxel_size: 0.05
+  use_intensity: False
+  sub_numpts: 80000
+  balance_weights: False
+  augmentation:
+    z_rotate: True
+    random_flip: False
+    random_scale: False
+    
+target_dataset:
+  name: 'MspcLiDAR_128'
+  # name: 'MspcLiDAR_64'
+  dataset_path: '/home/chenzhe/data/MspcLiDAR/kitti/sem_lidar128/'
+  # dataset_path: '/home/chenzhe/data/MspcLiDAR/kitti/sem_lidar64/'
+  mapping_path: '/home/chenzhe/data/PC_DA/core/datasets/mapping_cfg/mspclidar.yaml'
+  voxel_size: 0.05
+  use_intensity: False
+  sub_numpts:
+  balance_weights: False
+  augmentation:
+    z_rotate: True
+    random_flip: False
+    random_scale: False
+
+src_dataloader:
+  batch_size: 2
+  num_workers: 4
+
+tgt_dataloader:
+  batch_size: 2
+  num_workers: 4
+
+pipeline:
+  epochs: 50
+  gpus: 0
+  seed: 1234
+  validate: True
+  resume_lb: ''
+  resume_hb: ''
+  criterion: 'CELoss'
+
+  optimizer_name: 'SGD' # [SGD, Adam]
+
+  optimizer_SGD: 
+    lr: 0.002
+    momentum: 0.98
+    weight_decay: 0.0001
+  optimizer_Adam:
+    lr: 0.002
+
+  scheduler: 'CosineAnnealingLR'
+
+# OUTPUT_DIR: 'results/MspcLiDAR_64tosk_MinkUnet34_init_invWeightsCL_noBW_mixdata'
+OUTPUT_DIR: 'results/MspcLiDAR_128tosk_MinkUnet34_init_invWeightsCL_noBW_mixdata'

@@ -1,0 +1,96 @@
+model:
+  name: 'MinkUNet34_SD'
+  in_feat_size: 1
+  out_classes: 16
+  ignore_label: -1
+
+source_dataset:
+  name: 'SemanticKitti'
+  dataset_path: '/home/chenzhe/data/SemanticKitti/sequences'
+  mapping_path: '/home/chenzhe/PC_DA/core/datasets/mapping_cfg/semantic-kitti_16classes.yaml'
+
+  voxel_size: 0.05
+  use_intensity: False
+  sub_numpts: 80000
+  balance_weights: False
+  augmentation:
+    z_rotate: True
+    random_flip: True
+    random_jitter: True
+    random_scale: True
+
+target_dataset:
+  # name: 'MspcLiDAR_128'
+  name: 'MspcLiDAR_64'
+  # dataset_path: '/home/chenzhe/data/MspcLiDAR/kitti/sem_lidar128/'
+  dataset_path: '/home/chenzhe/data/MspcLiDAR/kitti/sem_lidar64/'
+  mapping_path: '/home/chenzhe/PC_DA/core/datasets/mapping_cfg/mspclidar.yaml'
+  voxel_size: 0.05
+  use_intensity: False
+  sub_numpts:
+  balance_weights: False
+  augmentation:
+    z_rotate: True
+    random_flip: True
+    random_jitter: False
+    random_scale: False
+
+src_dataloader:
+  batch_size: 4
+  num_workers: 8
+
+tgt_dataloader:
+  batch_size: 4
+  num_workers: 8
+
+pipeline:
+  epochs: 50
+  gpus: 0
+  seed: 1234
+  validate: True
+  resume_lb: '/home/chenzhe/PC_DA/results/exp/src_MinkUnet34_semantickitti_lr_0.002_noBW_fullaug/model_epoch048.pth'
+  # resume_lb: '/home/chenzhe/PC_DA/results/sem_lidar64_MinkUnet34_CosineAnnealingLR_noBW/model_epoch047.pth'
+  # resume_lb: '/home/chenzhe/PC_DA/results/111/MspcLiDAR_128tosk_MinkUnet34_init_invWeightsCL_noBW_pretrainedfrom128/model_epoch049.pth'
+  # resume_hb: '/home/chenzhe/PC_DA/results/sem_lidar64_MinkUnet34_CosineAnnealingLR/model_epoch048.pth'
+  # resume_hb: ''
+  # resume_hb: '/home/chenzhe/PC_DA/results/sem_lidar64_MinkUnet34_CosineAnnealingLR_noBW/model_epoch047.pth'
+  resume_hb: '/home/chenzhe/PC_DA/results/exp/sem_lidar64_MinkUnet34_CosineAnnealingLR_noBW_fullaug/model_epoch046.pth'
+  # resume_hb: '/home/chenzhe/PC_DA/results/111/MspcLiDAR_128tosk_MinkUnet34_init_invWeightsCL_noBW_pretrainedfrom128/model_epoch049.pth'
+  criterion: 'CELoss'
+
+  optimizer_name: 'SGD'
+
+  optimizer_SGD: 
+    lr: 0.002
+    momentum: 0.98
+    weight_decay: 0.0001
+  optimizer_Adam:
+    lr: 0.002
+
+  scheduler: 'CosineAnnealingLR'
+
+distill:
+  balance_weights: True
+  multi_level: True
+  CL_BLOCKS: ['block4', 'block5', 'block6', 'block7', 'block8']
+  RETURN_BLOCKS: ['block4', 'block5', 'block6', 'block7', 'block8']
+  LAMBDA_FEAT: 10
+  LAMBDA_OUT: 10
+  find_TP: True
+  use_momentum: True
+  momentum: 0.95
+  tau: 0.5
+  DELTA: 0.5
+  # CV_DIR: '/home/chenzhe/PC_DA/results/HB128_Proto'
+  # CV_DIR: '/home/chenzhe/PC_DA/results/MspcLiDAR_HB1282SK_MInkUNet34_init'
+  # CV_DIR: '/home/chenzhe/PC_DA/results/MspcLiDAR_128tosk_MinkUnet34_init_invWeightsCL_noBW'
+  CV_DIR: '/home/chenzhe/PC_DA/results/exp/HB64_Proto_old'
+  # CV_DIR: '/home/chenzhe/PC_DA/results/HB64_Proto_old'
+
+# OUTPUT_DIR: '/home/chenzhe/PC_DA/results/MspcLiDAR_HB1282SK_MInkUNet34_init'
+# OUTPUT_DIR: '/home/chenzhe/PC_DA/results/exp/MspcLiDAR_64tosk_MinkUnet34_init_invWeightsCL_noBW_pretrainedfrom64'
+OUTPUT_DIR: '/home/chenzhe/PC_DA/results/exp/MspcLiDAR_64tosk_MinkUnet34_init_invWeightsCL_noBW_fullaug'
+# OUTPUT_DIR: '/home/chenzhe/PC_DA/results/HB128_Proto'
+
+tgt2src_mapping:
+src2tgt_mapping:

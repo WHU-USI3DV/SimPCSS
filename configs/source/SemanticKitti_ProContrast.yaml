@@ -1,0 +1,52 @@
+model:
+  name: 'MinkUNet34_SD'
+  in_feat_size: 1
+  out_classes: 19
+  ignore_label: -1
+
+source_dataset:
+  name: 'SemanticKitti'
+  dataset_path: '/root/data/SemanticKitti/sequences'
+  mapping_path: '/root/PC_DA/core/datasets/mapping_cfg/semantic-kitti.yaml'
+
+  voxel_size: 0.05
+  use_intensity: False
+
+  sub_numpts: 80000
+
+  augmentation:
+    z_rotate: True
+
+  balance_weights: True
+
+dataloader:
+  batch_size: 8
+  num_workers: 4
+
+pipeline:
+  epochs: 50
+  gpus: 0
+  seed: 1234
+  validate: True
+  resume: ''
+
+  optimizer_name: 'SGD'
+
+  optimizer_SGD: 
+    lr: 0.01
+    momentum: 0.98
+    weight_decay: 0.0001
+
+  scheduler: 'ExponentialLR'
+
+contrast:
+  use_momentum: True
+  momentum: 0.9
+  tau: 50
+  multi_level: False
+  LAMBDA_FEAT: 1
+  LAMBDA_OUT: 1
+  CV_DIR: ''
+
+OUTPUT_DIR: 'results/src_MinkUnet34_ProContrast_tau0.1'
+

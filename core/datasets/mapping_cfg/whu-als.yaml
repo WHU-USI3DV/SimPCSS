@@ -1,0 +1,30 @@
+# This file is covered by the LICENSE file in the root of this project.
+labels:
+  0: "ground"
+  1: "building"
+  2: "low_veg"
+  3: "electric"
+  4: "light"
+  5: "veg"
+  6: "tree"
+  7: "bridge"
+  8: "vehicle"
+  9: "non_vehicle"
+  10: "water"
+  11: "others"
+
+# classes that are indistinguishable from single scan or inconsistent in
+# ground truth are mapped to their closest equivalent
+learning_map:
+  0: 0   # "ground"
+  1: 1   # "building"
+  2: 2   # "low_veg"
+  3: -1   # "electric"
+  4: -1   # "light"
+  5: 2   # "veg"
+  6: 3  # "tree"
+  7: -1   # "bridge"
+  8: 4  # "vehicle"
+  9: 4  # "non_vehicle"
+  10: -1   # "water"
+  11: -1   # "others"

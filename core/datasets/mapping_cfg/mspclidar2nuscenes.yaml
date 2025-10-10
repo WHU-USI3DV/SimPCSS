@@ -1,0 +1,122 @@
+labels:
+  0: 'noise'
+  1: 'animal'
+  2: 'human.pedestrian.adult'
+  3: 'human.pedestrian.child'
+  4: 'human.pedestrian.construction_worker'
+  5: 'human.pedestrian.personal_mobility'
+  6: 'human.pedestrian.police_officer'
+  7: 'human.pedestrian.stroller'
+  8: 'human.pedestrian.wheelchair'
+  9: 'movable_object.barrier'
+  10: 'movable_object.debris'
+  11: 'movable_object.pushable_pullable'
+  12: 'movable_object.trafficcone'
+  13: 'static_object.bicycle_rack'
+  14: 'vehicle.bicycle'
+  15: 'vehicle.bus.bendy'
+  16: 'vehicle.bus.rigid'
+  17: 'vehicle.car'
+  18: 'vehicle.construction'
+  19: 'vehicle.emergency.ambulance'
+  20: 'vehicle.emergency.police'
+  21: 'vehicle.motorcycle'
+  22: 'vehicle.trailer'
+  23: 'vehicle.truck'
+  24: 'flat.driveable_surface'
+  25: 'flat.other'
+  26: 'flat.sidewalk'
+  27: 'flat.terrain'
+  28: 'static.manmade'
+  29: 'static.other'
+  30: 'static.vegetation'
+  31: 'vehicle.ego'
+  255: 'ignore_label'
+labels_16:
+  -1: 'noise'
+  0: 'barrier'
+  1: 'bicycle'
+  2: 'bus'
+  3: 'car'
+  4: 'construction_vehicle'
+  5: 'motorcycle'
+  6: 'pedestrian'
+  7: 'traffic_cone'
+  8: 'trailer'
+  9: 'truck'
+  10: 'driveable_surface'
+  11: 'other_flat'
+  12: 'sidewalk'
+  13: 'terrain'
+  14: 'manmade'
+  15: 'vegetation'
+learning_map:
+  1: -1
+  5: -1
+  7: -1
+  8: -1
+  10: -1
+  11: -1
+  13: -1
+  19: -1
+  20: -1
+  0: -1
+  29: -1
+  31: -1
+  9: 0
+  14: 1
+  15: 2
+  16: 2
+  17: 3
+  18: 4
+  21: 5
+  2: 6
+  3: 6
+  4: 6
+  6: 6
+  12: 7
+  22: 8
+  23: 9
+  24: 10
+  25: 11
+  26: 12
+  27: 13
+  28: 14
+  30: 15
+  255: -1
+name2labels16:
+  'noise': -1 # --> -1 unlabelled
+  'barrier': 0 # 不映射
+  'bicycle': 1 # --> 1 bycycle
+  'bus': 2 # # --> 4 other-vehicle
+  'car': 3 # --> 0 car
+  'construction_vehicle': 4 # 不映射
+  'motorcycle': 5 # --> 2 motorcycle
+  'pedestrian': 6 # --> 5 person
+  'traffic_cone': 7 # 不映射
+  'trailer': 8 # --> 4 other-vehicle
+  'truck': 9 # --> 3 truck
+  'driveable_surface': 10 # --> 7 road
+  'other_flat': 11 # --> 9 other-ground
+  'sidewalk': 12 # --> 8 sidewalks
+  'terrain': 13 # --> 13 terrain
+  'manmade': 14 # --> 不映射
+  'vegetation': 15 # --> 12 vegetation
+  
+
+mspc2nuscenes:
+  0: 3
+  1: 1
+  2: 5
+  3: 9
+  4: 8
+  5: 6
+  7: 10
+  8: 12
+  9: 11
+  10: -1
+  11: -1
+  12: 12
+  13: 13
+  14: -1
+  15: -1

@@ -1,0 +1,75 @@
+# This file is covered by the LICENSE file in the root of this project.
+labels:
+  0 : "unlabeled"
+  1 : "outlier"
+  10: "car"
+  11: "bicycle"
+  13: "bus"
+  15: "motorcycle"
+  16: "on-rails"
+  18: "truck"
+  20: "other-vehicle"
+  30: "person"
+  31: "bicyclist"
+  32: "motorcyclist"
+  40: "road"
+  44: "parking"
+  48: "sidewalk"
+  49: "other-ground"
+  50: "building"
+  51: "fence"
+  52: "other-structure"
+  60: "lane-marking"
+  70: "vegetation"
+  71: "trunk"
+  72: "terrain"
+  80: "pole"
+  81: "traffic-sign"
+  99: "other-object"
+  252: "moving-car"
+  253: "moving-bicyclist"
+  254: "moving-person"
+  255: "moving-motorcyclist"
+  256: "moving-on-rails"
+  257: "moving-bus"
+  258: "moving-truck"
+  259: "moving-other-vehicle"
+
+# classes that are indistinguishable from single scan or inconsistent in
+# ground truth are mapped to their closest equivalent
+learning_map:
+  0 : -1   
+  1 : -1   
+  10: 0    
+  11: 1    
+  13: 4    
+  15: 2    
+  16: 4    
+  18: 3    
+  20: 4    
+  30: 5    
+  31: 6    
+  32: 6    
+  40: 7    
+  44: 0    
+  48: 8   
+  49: 9   
+  50: 10   
+  51: 11   
+  52: -1   
+  60: 7    
+  70: 12   
+  71: 12   
+  72: 13   
+  80: 14   
+  81: 15   
+  99: -1   
+  252: 0   
+  253: 6   
+  254: 5   
+  255: 6   
+  256: 4   
+  257: 4   
+  258: 3   
+  259: 4   
+

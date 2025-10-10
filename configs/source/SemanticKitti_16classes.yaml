@@ -1,0 +1,46 @@
+model:
+  name: 'MinkUNet34'
+  in_feat_size: 1
+  out_classes: 16
+  ignore_label: -1
+
+source_dataset:
+  name: 'SemanticKitti'
+  dataset_path: '/home/chenzhe/data/SemanticKitti/sequences/'
+  mapping_path: '/home/chenzhe/PC_DA/core/datasets/mapping_cfg/semantic-kitti_16classes.yaml'
+
+  voxel_size: 0.05
+  use_intensity: False
+  sub_numpts: 80000
+  balance_weights: False
+  augmentation:
+    z_rotate: True
+    random_jitter: True
+    random_flip: True
+    random_scale: True
+
+dataloader:
+  batch_size: 4
+  num_workers: 12
+
+pipeline:
+  epochs: 50
+  gpus: 0
+  seed: 1234
+  validate: True
+  resume: ''
+  # resume: '/home/chenzhe/PC_DA/results/exp/sem_lidar64_MinkUnet34_CosineAnnealingLR_noBW_fullaug/model_epoch046.pth'
+  # resume: '/home/chenzhe/PC_DA/results/exp/sem_lidar128_MinkUnet34_CosineAnnealingLR_noBW_fullaug/model_epoch049.pth'
+  criterion: 'CELoss'
+
+  optimizer_name: 'SGD'
+
+  optimizer_SGD: 
+    lr: 0.002
+    momentum: 0.98
+    weight_decay: 0.0001
+
+  scheduler: 'CosineAnnealingLR'
+
+OUTPUT_DIR: 'results/exp/src_MinkUnet34_semantickitti_lr_0.002_noBW_fullaug'
+

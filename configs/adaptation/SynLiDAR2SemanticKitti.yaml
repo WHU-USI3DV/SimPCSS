@@ -1,0 +1,61 @@
+model:
+  name: 'MinkUNet34_ProContrast'
+  in_feat_size: 1
+  out_classes: 19
+  ignore_label: -1
+
+source_dataset:
+  name: 'SynLiDAR'
+  dataset_path: '/root/data/SynLiDAR'
+  mapping_path: '/root/PC_DA/core/datasets/mapping_cfg/synlidar.yaml'
+
+  voxel_size: 0.05
+  use_intensity: False
+  sub_numpts: 80000
+  balance_weights: False
+  augmentation:
+    z_rotate: True
+
+target_dataset:
+  name: 'SemanticKitti'
+  dataset_path: '/root/data/SemanticKitti/sequences'
+  mapping_path: '/root/PC_DA/core/datasets/mapping_cfg/semantic-kitti.yaml'
+  voxel_size: 0.05
+  use_intensity: False
+  sub_numpts: 80000
+  augmentation:
+    z_rotate: True
+
+dataloader:
+  batch_size: 4
+  num_workers: 2
+
+pipeline:
+  epochs: 50
+  gpus: 0
+  seed: 1234
+  validate: True
+  resume: '/root/PC_DA/results/src_SynLiDAR_MinkUnet34/model_epoch049.pth'
+  criterion: 'SoftDICELoss'
+
+  optimizer_name: 'SGD'
+
+  optimizer_SGD: 
+    lr: 0.01
+    momentum: 0.98
+    weight_decay: 0.0001
+
+  scheduler: 'ExponentialLR'
+
+contrast:
+  use_momentum: True
+  momentum: 0.9
+  tau: 50
+  multi_level: False
+  LAMBDA_FEAT: 1
+  LAMBDA_OUT: 1
+  DELTA: 0.9
+  CV_DIR: ''
+
+OUTPUT_DIR: 'results/SynLiDAR2SemanticKitti_MinkUnet34_ProContrast'
+

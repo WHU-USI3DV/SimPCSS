@@ -1,0 +1,41 @@
+model:
+  name: 'MinkUNet34'
+  in_feat_size: 1
+  out_classes: 19
+  ignore_label: -1
+
+source_dataset:
+  name: 'SemanticKitti'
+  dataset_path: '/root/data/SemanticKitti/sequences'
+  mapping_path: '/root/data/PC_DA/core/datasets/mapping_cfg/semantic-kitti_16classes.yaml'
+
+  voxel_size: 0.05
+  use_intensity: False
+  sub_numpts:
+  balance_weights: True
+  augmentation:
+    z_rotate: True
+
+dataloader:
+  batch_size: 8
+  num_workers: 8
+
+pipeline:
+  epochs: 50
+  gpus: 0
+  seed: 1234
+  validate: True
+  resume: ''
+  criterion: 'CELoss'
+
+  optimizer_name: 'SGD'
+
+  optimizer_SGD: 
+    lr: 0.002
+    momentum: 0.98
+    weight_decay: 0.0001
+
+  scheduler: 'CosineAnnealingLR'
+
+OUTPUT_DIR: 'results/src_MinkUnet34_semantickitti_CosineAnnealingLR'
+
