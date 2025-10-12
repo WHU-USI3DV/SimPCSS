@@ -29,8 +29,6 @@ pipeline:
   seed: 1234
   validate: True
   resume: ''
-  # resume: '/home/chenzhe/PC_DA/results/exp/sem_lidar64_MinkUnet34_CosineAnnealingLR_noBW_fullaug/model_epoch046.pth'
-  # resume: '/home/chenzhe/PC_DA/results/exp/sem_lidar128_MinkUnet34_CosineAnnealingLR_noBW_fullaug/model_epoch049.pth'
   criterion: 'CELoss'
 
   optimizer_name: 'SGD'

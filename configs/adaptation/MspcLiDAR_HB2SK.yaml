@@ -49,13 +49,7 @@ pipeline:
   seed: 1234
   validate: True
   resume_lb: '/home/chenzhe/PC_DA/results/exp/src_MinkUnet34_semantickitti_lr_0.002_noBW_fullaug/model_epoch048.pth'
-  # resume_lb: '/home/chenzhe/PC_DA/results/sem_lidar64_MinkUnet34_CosineAnnealingLR_noBW/model_epoch047.pth'
-  # resume_lb: '/home/chenzhe/PC_DA/results/111/MspcLiDAR_128tosk_MinkUnet34_init_invWeightsCL_noBW_pretrainedfrom128/model_epoch049.pth'
-  # resume_hb: '/home/chenzhe/PC_DA/results/sem_lidar64_MinkUnet34_CosineAnnealingLR/model_epoch048.pth'
-  # resume_hb: ''
-  # resume_hb: '/home/chenzhe/PC_DA/results/sem_lidar64_MinkUnet34_CosineAnnealingLR_noBW/model_epoch047.pth'
   resume_hb: '/home/chenzhe/PC_DA/results/exp/sem_lidar64_MinkUnet34_CosineAnnealingLR_noBW_fullaug/model_epoch046.pth'
-  # resume_hb: '/home/chenzhe/PC_DA/results/111/MspcLiDAR_128tosk_MinkUnet34_init_invWeightsCL_noBW_pretrainedfrom128/model_epoch049.pth'
   criterion: 'CELoss'
 
   optimizer_name: 'SGD'
@@ -81,16 +75,9 @@ distill:
   momentum: 0.95
   tau: 0.5
   DELTA: 0.5
-  # CV_DIR: '/home/chenzhe/PC_DA/results/HB128_Proto'
-  # CV_DIR: '/home/chenzhe/PC_DA/results/MspcLiDAR_HB1282SK_MInkUNet34_init'
-  # CV_DIR: '/home/chenzhe/PC_DA/results/MspcLiDAR_128tosk_MinkUnet34_init_invWeightsCL_noBW'
   CV_DIR: '/home/chenzhe/PC_DA/results/exp/HB64_Proto_old'
-  # CV_DIR: '/home/chenzhe/PC_DA/results/HB64_Proto_old'
-
-# OUTPUT_DIR: '/home/chenzhe/PC_DA/results/MspcLiDAR_HB1282SK_MInkUNet34_init'
-# OUTPUT_DIR: '/home/chenzhe/PC_DA/results/exp/MspcLiDAR_64tosk_MinkUnet34_init_invWeightsCL_noBW_pretrainedfrom64'
+  
 OUTPUT_DIR: '/home/chenzhe/PC_DA/results/exp/MspcLiDAR_64tosk_MinkUnet34_init_invWeightsCL_noBW_fullaug'
-# OUTPUT_DIR: '/home/chenzhe/PC_DA/results/HB128_Proto'
 
 tgt2src_mapping:
 src2tgt_mapping:

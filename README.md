@@ -16,7 +16,7 @@ This is the PyTorch implementation about point cloud semantic segmentation of th
 <strong>Simulated Point Clouds Explicitly Guided Semantic Segmentation</strong>
 </p>
 <div align=center>
-<img src="media/teaser.png" alt="Network" style="zoom:30%" align='middle'>
+<img src="media/teaser.png" alt="Network" style="zoom:60%" align='middle'>
 </div>
 
 <p align="justify">
@@ -45,109 +45,100 @@ conda activate pcda
 ```
 
 ### 💾 Dataset 
-Our method has been experimented in both the benchmark and practical applications.
->- **ISPRS 2D cross-domain semantic segmentation benchmark**  
-&ensp;&ensp;&ensp;&ensp;Provided by [Te Shi](https://github.com/te-shi/MUCSS?tab=readme-ov-file), the ISRPS image dataset for cross-domain semantic segmentation can be downloaded via [Google Drive](https://drive.google.com/file/d/1amV--tjtjBMUscUVBqXxXws_vBCo-QdV/view) or [BaiduDisk](https://pan.baidu.com/share/init?surl=Ob12TozQ2Xjcm3rcv7LuRA) (Acess Code: vaam).
->- **Pratical applications: SpaceNet-Shanghai to GES-Wuhan**  
-&ensp;&ensp;&ensp;&ensp;The SpaceNet-Shanghai dataset and GES image dataset ( Wuchang District, Wuhan ) can be downloaded via [Google Drive](https://drive.google.com/drive/folders/1l5ARaev5hO95LG1e3e7top-Gda3y8BGb?usp=sharing) or [BaiduDist](https://pan.baidu.com/s/1qmGYUhlGQ9mJGvgez-bbwQ ) (Acess Code: 9527)
+Our method has been experimented in both the  simulated and real-world datasets.
 
-Once the datasets are downloaded and decompressed, change the folder path of the dataset according to the actual path in file *```UDA-Seg/core/datasets/dataset_path_catalog.py```* (line 33-36) for training and testing purposes.
+
+- HQSLiDAR
+  - The HQSLiDAR dataset (32/64/128 channel) can be downloaded via [Google Drive](https://drive.google.com/file/d/1Cg62MEEIoYsMgi3gbyYBaV_09JL92izN/view?usp=drive_link)
+  - the data is organized as follows:
+    ```bash
+    # HQSLiDAR dir: the directory of HQSLiDAR dataset.
+    # |- HQSLiDAR_DIR
+    #   |- 2kitti.yaml # The mapping file that maps categories to the SemanticKITTI classes.
+    #   |- sem_lidar32
+    #     |- 00
+    #       |- velodyne
+    #         |- 00000.bin
+    #         |- 00001.bin
+    #         |- ...
+    #       |- labels
+    #         |- 00000.label
+    #         |- 00001.label
+    #         |- ...
+    #     |- 01
+    #     |- ...
+    #   |- sem_lidar64
+    #   |- sem_lidar128
+    ```
+
+- SemanticKITTI
+  - Download [SemanticKITTI](https://www.semantic-kitti.org/dataset.html#download) dataset.
+  - the data is organized as follows:
+    ```bash
+    # SEMANTIC_KITTI_DIR: the directory of SemanticKITTI dataset.
+    # |- SEMANTIC_KITTI_DIR
+    #   |- dataset
+    #     |- sequences
+    #       |- 00
+    #       |- 01
+    #       |- ...
+    ```
+
+- nuScenes
+  - Download the official [NuScene](https://www.nuscenes.org/nuscenes#download) dataset (with Lidar Segmentation) and organize the downloaded files as follows:
+    ```bash
+    # NUSCENES_DIR
+    # │── samples
+    # │── sweeps
+    # │── lidarseg
+    # ...
+    # │── v1.0-trainval 
+    # │── v1.0-test
+    ```
+    
+  - Run preprocessing code for ArkitScenes as follows:
+    ```bash
+    # RAW_AS_DIR: the directory of downloaded ArkitScenes dataset.
+    # PROCESSED_AS_DIR: the directory of processed ArkitScenes dataset (output dir).
+    # NUM_WORKERS: Number for workers for preprocessing, default same as cpu count (might OOM).
+    cd $POINTCEPT_DIR
+    export PYTHONPATH=./
+    python pointcept/datasets/preprocessing/arkitscenes/preprocess_arkitscenes_mesh.py --dataset_root $RAW_AS_DIR --output_root $PROCESSED_AS_DIR --num_workers $NUM_WORKERS
+    ```
+
+
+Once the datasets are downloaded and organized, change the *dataset_path* in the related config file according to the actual path for training and testing purposes.
 
 ### 🔦 Train
-We provide the training script for source domain training and domain adaptation training. 
-```
-cd UDA-Seg
-bash train_with_sd.sh
-```
-Specially, supervised training on labeled source domain data is needed to initialize the network parameters firstly.
-```
-# Set the num of GPUs, for example, 2 GPUs
-export NGPUS=2
-# train on source data
-python -m torch.distributed.launch --nproc_per_node=$NGPUS train_src.py -cfg configs/rs_deeplabv2_r101_src.yaml OUTPUT_DIR results/src_r101_try/
-```
-Then, we conduct the unlabeled target domain data and labeled source domain data for adversarial training to carry out domain adaptation.
-```
-# train with FGDAL-MSF-DNT
-python -m torch.distributed.launch --nproc_per_node=$NGPUS train_SEmsf_dnt_adv_BD+FD_FreezeBackbone.py -cfg configs/rs_deeplabv2_r101_adv.yaml OUTPUT_DIR results/adv_test resume results/src_r101_try/model_iter030000.pth
-```
-Note that our framework does not use **self distill**. However, you can slightly modify the code (network) in *```train_self_distill.py```* to conduct self distill and further improve the performance.
 
+We first train a model on a high-quality simulated dataset, which is then used to initialize high-quality class prototypes.
 ```
-# generate pseudo labels for self distillation
-python test.py -cfg configs/rs_deeplabv2_r101_tgt_self_distill.yaml --saveres resume results/adv_test/model_iter080000.pth OUTPUT_DIR datasets/rs/soft_labels DATASETS.TEST rs_train
-# train with self distillation
-python -m torch.distributed.launch --nproc_per_node=$NGPUS train_self_distill.py -cfg configs/rs_r101_tgt_self_distill.yaml OUTPUT_DIR results/sd_test
+python train_source.py -cfg source/MspcLiDAR.yaml
+
+python prototype_dist_init.py -cfg adaptation/MspcLiDAR_HB2SK.yaml
 ```
+
+Then, we conduct the imitation learning using both the HQSliDAR and the low-quality point clouds.
+```
+# update prototype
+python train_SD.py -cfg adaptation/MspcLiDAR_HB2SK.yaml
+
+# freeze prototype
+python train_SD_Proto.py -cfg adaptation/MspcLiDAR_HB2SK.yaml 
+```
+
 ### ✏️ Test
 
 ```
-# Test the performance of a specific ckpt
-python test_SEmsf_dnt.py -cfg configs/configs/rs_deeplabv2_r101_adv.yaml --saveres resume results/adv_test/model_iter080000.pth OUTPUT_DIR datasets/rs/pred
-# Test the performance of all ckpt in a folder
-python test_SEmsf_dnt.py -cfg configs/configs/rs_deeplabv2_r101_adv.yaml --saveres resume results/adv_test OUTPUT_DIR datasets/rs/pred
-```
-Additionaly, for predicting a RS image with large range, we provide a predition code based on sliding window.
-```
-python predcit_dnt_SEmsf_large_image.py -cfg configs/configs/rs_deeplabv2_r101_adv.yaml --img_path test_img/Wuchang_GES_Image.tif
-```
+# Test the performance of network with LQ2HQ learner.
+python test_SD.py -cfg adaptation/MspcLiDAR_HB2SK.yaml
 
-## 🚅 Building height deriving from global DSM
-### 💻 Requirements
-The code has been tested on:
-- Ubuntu 20.04
-- Python 3.8.0
-
-### 🔧 Installation
-Fewer packages are required for building height extraction:
-```
-conda create -n BHD python==3.8
-conda activate BHD
-pip install matplotlib tqdm gdal argparse opencv-python
-```
-
-### 💾 Dataset 
-The DSM with global coverage of 30m resolution is accessible in [Japan Aerospace Exploration Agency  Earth Observation Research Center](https://www.eorc.jaxa.jp/ALOS/en/aw3d30/data/index.htm).
-
-
-### 🔦 Usage
-To derive the building height from global DSM, you can use the following commands:
-```
-python BH_ExtractionFromAW3D30.py --input_path AW3D30_WH.tif --output_path BH_WH.tif
+# Test the performance of network without LQ2HQ learner.
+python test.py -cfg adaptation/MspcLiDAR_HB2SK.yaml
 ```
 
 ## 💡 Citation
 If you find this repo helpful, please give us a 😍 star 😍.
 Please consider citing our works if this program benefits your project.
 ```
-@article{CHEN2024122720,
-  title = {City-Scale Solar {{PV}} Potential Estimation on {{3D}} Buildings Using Multi-Source {{RS}} Data: {{A}} Case Study in {{Wuhan}}, {{China}}},
-  author = {Chen, Zhe and Yang, Bisheng and Zhu, Rui and Dong, Zhen},
-  year = {2024},
-  journal = {Applied Energy},
-  volume = {359},
-  pages = {122720},
-  issn = {0306-2619},
-  doi = {10.1016/j.apenergy.2024.122720}
-}
-
-@article{chenJointAlignmentDistribution2022,
-  title = {Joint Alignment of the Distribution in Input and Feature Space for Cross-Domain Aerial Image Semantic Segmentation},
-  author = {Chen, Zhe and Yang, Bisheng and Ma, Ailong and Peng, Mingjun and Li, Haiting and Chen, Tao and Chen, Chi and Dong, Zhen},
-  year = {2022},
-  month = dec,
-  journal = {International Journal of Applied Earth Observation and Geoinformation},
-  volume = {115},
-  pages = {103107},
-  issn = {1569-8432},
-  doi = {10.1016/j.jag.2022.103107},
-  urldate = {2022-12-02},
-  langid = {english}
-}
-
 ```
-
-## 🔗 Related Projects
-We sincerely thank the excellent project:
-- [FADA](https://github.com/JDAI-CV/FADA) for UDA semantic segmentation;
-- [FreeReg](https://github.com/WHU-USI3DV/FreeReg) for readme template.

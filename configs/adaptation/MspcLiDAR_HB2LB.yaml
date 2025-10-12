@@ -51,16 +51,7 @@ pipeline:
   seed: 1234
   validate: True
   resume_lb: '/home/chenzhe/PC_DA/results/sem_lidar32_MinkUnet34_CosineAnnealingLR_noBW/model_epoch046.pth'
-  # resume_lb: ''
-  # resume_lb: '/home/chenzhe/PC_DA/results/exp/sem_lidar64_MinkUnet34_CosineAnnealingLR_noBW_fullaug/model_epoch046.pth'
-  # resume_lb: '/home/chenzhe/PC_DA/results/sem_lidar64_MinkUnet34_CosineAnnealingLR_noBW/model_epoch047.pth'
-  # resume_lb: '/home/chenzhe/PC_DA/results/sem_lidar128_MinkUnet34_CosineAnnealingLR_noBW/model_epoch048.pth'
-  # resume_hb: '/home/chenzhe/PC_DA/results/sem_lidar128_MinkUnet34_CosineAnnealingLR/model_epoch046.pth'
-  # resume_hb: '/home/chenzhe/PC_DA/results/sem_lidar64_MinkUnet34_CosineAnnealingLR/model_epoch048.pth'
-  # resume_hb: '/home/chenzhe/PC_DA/results/MspcLiDAR64_source_InvWeights/model_epoch048.pth'
   resume_hb: '/home/chenzhe/PC_DA/results/exp/sem_lidar64_MinkUnet34_CosineAnnealingLR_noBW_fullaug/model_epoch046.pth'
-  # resume_hb: '/home/chenzhe/PC_DA/results/sem_lidar64_MinkUnet34_CosineAnnealingLR_noBW/model_epoch047.pth'
-  # resume_hb: '/home/chenzhe/PC_DA/results/sem_lidar128_MinkUnet34_CosineAnnealingLR_noBW/model_epoch048.pth'
   criterion: 'CELoss'
 
   optimizer_name: 'SGD' # [SGD, Adam]
@@ -86,18 +77,9 @@ distill:
   momentum: 0.95
   tau: 0.5
   DELTA: 0.5
-  # CV_DIR: ''
-  # CV_DIR: 'results/MspcLiDAR_64to32_MinkUnet34_init_invWeightsCL'
-  # CV_DIR: '/results/MspcLiDAR_HB2LB_MinkUnet34_128to32'
-  # CV_DIR: 'results/MspcLiDAR_HB2LB_MinkUnet34_64to32_init_invWeightsCL'
   CV_DIR: '/home/chenzhe/PC_DA/results/exp/HB64_Proto'
 
-# OUTPUT_DIR: 'results/MspcLiDAR_HB2LB_MinkUnet34_128to32'
-# OUTPUT_DIR: 'results/MspcLiDAR_HB2LB_MinkUnet34_64to32_init_invWeightsCL'
-# OUTPUT_DIR: 'results/MspcLiDAR_64to32_MinkUnet34_init_invWeightsCL'
-# OUTPUT_DIR: 'results/exp/MspcLiDAR_64to32_MinkUnet34_init_invWeightsCL_noBW_resumefrom128'
 OUTPUT_DIR: 'results/exp/MspcLiDAR_64to32_MinkUnet34_init_invWeightsCL_noBW'
-# OUTPUT_DIR: 'results/SPCGSS_resume_64_mspclidar32'
 
 tgt2src_mapping:
 src2tgt_mapping:
