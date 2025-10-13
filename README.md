@@ -49,7 +49,7 @@ Our method has been experimented in both the  simulated and real-world datasets.
 
 
 - HQSLiDAR
-  - The HQSLiDAR dataset (32/64/128 channel) can be downloaded via [Google Drive](https://drive.google.com/file/d/1Cg62MEEIoYsMgi3gbyYBaV_09JL92izN/view?usp=drive_link)
+  - The HQSLiDAR dataset (32/64/128 channel) can be downloaded via [Google Drive](https://drive.google.com/drive/folders/1REJi-ssGPPFNj-vojccbHQ8n6TH5TQxQ?usp=drive_link)
   - the data is organized as follows:
     ```bash
     # HQSLiDAR dir: the directory of HQSLiDAR dataset.
